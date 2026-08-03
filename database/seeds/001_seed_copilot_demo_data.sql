@@ -215,3 +215,40 @@ SELECT TOP (10)
 FROM [analytics].[vw_CopilotGenreEngagement]
 ORDER BY [EventDate] DESC, [StreamCount] DESC;
 GO
+/* Validation: inspect approved analytics views without depending on aliases */
+
+SELECT
+    N'ListeningEvent' AS [DatasetName],
+    COUNT_BIG(*) AS [RecordCount],
+    MAX([StartedAt]) AS [LatestRecordAt]
+FROM [vibestream].[ListeningEvent]
+
+UNION ALL
+
+SELECT
+    N'ArtistFollow',
+    COUNT_BIG(*),
+    MAX([FollowedAt])
+FROM [vibestream].[ArtistFollow]
+
+UNION ALL
+
+SELECT
+    N'CopilotQueryAudit',
+    COUNT_BIG(*),
+    MAX([RequestedAt])
+FROM [vibestream].[CopilotQueryAudit];
+GO
+
+SELECT TOP (10) *
+FROM [analytics].[vw_CopilotArtistPerformance];
+
+SELECT TOP (10) *
+FROM [analytics].[vw_CopilotPlaylistPerformance];
+
+SELECT TOP (10) *
+FROM [analytics].[vw_CopilotGenreEngagement];
+
+SELECT *
+FROM [analytics].[vw_CopilotDataFreshness];
+GO
